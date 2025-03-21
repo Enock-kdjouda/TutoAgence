@@ -2,6 +2,10 @@
 
 @section('content')
 
+    <!-- <x-alert type="success" class="fw-bold" >
+        Des informations
+    </x-alert> -->
+   <!-- <x-component-weather></x-component-weather> -->
     <div class="bg-light p-5 mb-5 text-center">
         <div class="container">
             <h1>Agence Immo</h1>

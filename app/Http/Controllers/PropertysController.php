@@ -7,8 +7,14 @@ use Illuminate\Http\Request;
 use App\Models\Property;
 use App\Http\Requests\SearchPropertiesFormRequest;
 use App\Http\Requests\PropertyContactRequest;
+use App\Jobs\DemoJob;
+use Illuminate\Support\Facades\Notification;
 use App\Mail\PropertyContactMail;
 use Illuminate\Support\Facades\Mail; 
+use App\Models\User;
+use App\Notifications\ContactRequestNotification;
+
+
 
 class PropertysController extends Controller
 {
@@ -42,6 +48,8 @@ class PropertysController extends Controller
 
    }
    public function show(String $slug, Property $property){
+
+        DemoJob::dispatch($property)->delay(now()->addSeconds(10));
         if($slug !== $property->getSlug()){
             return to_route('property.show',[
                 'slug' => $property->getSlug(),
@@ -53,11 +61,15 @@ class PropertysController extends Controller
            
         ]);
    }
+   public function contact(Property $property, PropertyContactRequest $request){
 
-   public function contact(PropertyContactRequest $request, Property $property){
+        // event(new ContactRequestEvent($property, $request->validated()));
+        // Mail::send(new PropertyContactMail($property, $request->validated()));
+        /** @var User $user */
+        $user = User::first();
+        $user -> notify(new ContactRequestNotification($property, $request->validated()));
+        return back()->with('success', 'Votre demande de contact a bien été envoyé');
+}
 
-        Mail::send(new PropertyContactMail($property, $request->validated()));
-        return back()->with('success', 'Votre message a bien été envoyé');
-
-   }
+  
 }

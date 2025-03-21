@@ -1,5 +1,8 @@
 <div class="card">
     <div class="card-body">
+        @if ($property->image)
+            <img src="{{$property->imageUrl()}}" style="width: 100%; height: 200% ; object-fit: cover" alt="">
+        @endif
         <h5 class="card-title">
             <a href="{{route('property.show', ['slug' => $property->getSlug(), 'property' => $property])}}">{{$property->title}}</a>
         </h5>
